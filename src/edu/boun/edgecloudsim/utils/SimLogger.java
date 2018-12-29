@@ -347,14 +347,15 @@ public class SimLogger {
 			if (value.isInWarmUpPeriod())
 				continue;
 
-			if (value.getStatus() == SimLogger.TASK_STATUS.COMLETED) {
+			if (value.getStatus() == SimLogger.TASK_STATUS.COMLETED && value.getExecDC() == 6) {
 				completedTask[value.getTaskType()]++;
 
 				if (value.getVmType() == SimSettings.VM_TYPES.CLOUD_VM.ordinal())
 					completedTaskOnCloud[value.getTaskType()]++;
 				else
 					completedTaskOnCloudlet[value.getTaskType()]++;
-			} else {
+			} 
+			else if (value.getStatus() != SimLogger.TASK_STATUS.COMLETED && value.getExecDC() == 6) {
 				failedTask[value.getTaskType()]++;
 
 				if (value.getVmType() == SimSettings.VM_TYPES.CLOUD_VM.ordinal())
@@ -363,7 +364,7 @@ public class SimLogger {
 					failedTaskOnCloudlet[value.getTaskType()]++;
 			}
 
-			if (value.getStatus() == SimLogger.TASK_STATUS.COMLETED) {
+			if (value.getStatus() == SimLogger.TASK_STATUS.COMLETED && value.getExecDC() == 6) {
 				cost[value.getTaskType()] += value.getCost();
 				serviceTime[value.getTaskType()] += value.getServiceTime();
 				networkDelay[value.getTaskType()] += value.getNetworkDelay();
@@ -373,7 +374,8 @@ public class SimLogger {
 					wanDelay[value.getTaskType()] += value.getNetworkDelay();
 					serviceTimeOnCloud[value.getTaskType()] += value.getServiceTime();
 					processingTimeOnCloud[value.getTaskType()] += (value.getServiceTime() - value.getNetworkDelay());
-				} else {
+				} 
+				else if (value.getStatus() != SimLogger.TASK_STATUS.COMLETED && value.getExecDC() == 6){
 					lanDelay[value.getTaskType()] += value.getNetworkDelay();
 					serviceTimeOnCloudlet[value.getTaskType()] += value.getServiceTime();
 					processingTimeOnCloudlet[value.getTaskType()] += (value.getServiceTime() - value.getNetworkDelay());
@@ -621,6 +623,16 @@ public class SimLogger {
 		taskMap.clear();
 		vmLoadList.clear();
 	}
+
+	public void setExecDC(int task, int recBS) {
+		taskMap.get(task).setExecDC(recBS);
+		
+	}
+	
+	public int getExecDC(int task, int recBS) {
+		return taskMap.get(task).getExecDC();
+		
+	}
 }
 
 class VmLoadLogItem {
@@ -642,9 +654,12 @@ class VmLoadLogItem {
 }
 
 class LogItem {
+	
+
 	private SimLogger.TASK_STATUS status;
 	private int initialDC;
 	private int datacenterId;
+	private int execDC;
 	private int hostId;
 	private int vmId;
 	private int vmType;
@@ -678,6 +693,14 @@ class LogItem {
 			isInWarmUpPeriod = true;
 		else
 			isInWarmUpPeriod = false;
+	}
+	
+	public int getExecDC() {
+		return execDC;
+	}
+
+	public void setExecDC(int execDC) {
+		this.execDC = execDC;
 	}
 	
 	public void setInitDC(int DC) {

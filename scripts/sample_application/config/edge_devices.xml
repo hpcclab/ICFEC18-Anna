@@ -243,7 +243,7 @@
             <x_pos>7</x_pos>
             <y_pos>7</y_pos>
             <wlan_id>6</wlan_id>
-            <attractiveness>1</attractiveness>
+            <attractiveness>3</attractiveness>
         </location>
         <hosts>
             <host>

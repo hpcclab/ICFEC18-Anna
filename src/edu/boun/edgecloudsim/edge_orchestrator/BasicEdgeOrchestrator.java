@@ -138,19 +138,21 @@ public class BasicEdgeOrchestrator extends EdgeOrchestrator {
 	public EdgeVM selectVmOnHost(Task task){
 		
 		EdgeVM selectedVM = getVM(task, recBS);
-		
+		SimLogger.getInstance().setExecDC(task.getCloudletId(),recBS);
 		return selectedVM;
 	}
 	
 	public EdgeVM selectVmOnMECT(Task task){
 		int bs = getMectDC(task); 
 		finalBS = bs;
+		SimLogger.getInstance().setExecDC(task.getCloudletId(),bs);
 		EdgeVM selectedVM = getVM(task, bs);
 		return selectedVM;
 	}
 	
 	public EdgeVM selectVmOnC(Task task){
 		int bs = getCertainty(task); 
+		SimLogger.getInstance().setExecDC(task.getCloudletId(),bs);
 		finalBS = bs;
 		EdgeVM selectedVM = getVM(task, bs);
 		return selectedVM;
@@ -165,6 +167,7 @@ public class BasicEdgeOrchestrator extends EdgeOrchestrator {
 	
 		int bestBS = getDC(task);
 		finalBS = bestBS;
+		SimLogger.getInstance().setExecDC(task.getCloudletId(),bestBS);
 		//System.out.print("The selected BS is" + bestBS + "with probability = " + probab+"\n");
 		EdgeVM selectedVM = getVM(task, bestBS);
 		return selectedVM;
